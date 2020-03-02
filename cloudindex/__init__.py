@@ -4,7 +4,7 @@ import fnmatch
 from pyaltt2.converters import parse_date
 from types import SimpleNamespace
 
-__version__ = '0.0.3'
+__version__ = '0.0.4'
 
 _object_field_map = {
     'gcs': {
