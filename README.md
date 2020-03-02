@@ -44,7 +44,7 @@ pip3 install cloudindex
 
 ```
 usage: cloud-index [-h] [--version] [-p DIR] [-k FILE] [-s TYPE] [-r]
-                   [-x FILE] [-T DIR] [-c] [-M FILE:field]
+                   [-x FILE] [-T DIR] [--fetch-meta] [-c] [-M FILE:field]
                    BUCKET
 
 Cloud Storage indexer
@@ -67,6 +67,8 @@ optional arguments:
                         Files (masks) to exclude)
   -T DIR, --time-format DIR
                         Time format (default: %Y-%m-%d %H:%M)
+  --fetch-meta          Fetch custom metadata (for S3), for GCS meta data is
+                        always included
   -c, --checksums       Get checksums from md5sums, sha1sums and sha256sums
   -M FILE:field, --meta-file FILE:field
                         Additional "<info> <file>" file, e.g. SSL certs

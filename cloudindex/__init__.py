@@ -37,6 +37,7 @@ def make_index(bucket,
                time_format='%Y-%m-%d %H:%M',
                recursive=False,
                cs='gcs',
+               fetch_meta=False,
                get_checksums=False,
                meta_files=[]):
     """
@@ -48,6 +49,7 @@ def make_index(bucket,
         time_format: default: %Y-%m-%d %H:%M
         recursive: recursive indexing
         cs: cloud storage, gcs (default) or s3
+        fetch_meta: fetch additional meta data (for s3)
         get_chesksums: get additional metadata from checksum files (md5sums,
             sha1sums, sha256sums)
         meta_files: list of extra "<info>  <file>" files, (FILE, field) tuples
@@ -181,23 +183,6 @@ def make_index(bucket,
                 l['size'] = folder_info.get(folder)['s']
                 break
 
-    def format_object(o):
-        out = SimpleNamespace()
-        for k, v in _object_field_map[cs].items():
-            if isinstance(o, dict):
-                value = o[v]
-            else:
-                value = getattr(o, v)
-            setattr(out, k, value)
-        if cs == 'gcs':
-            out.meta = o.metadata if o.metadata else {}
-            if out.meta:
-                if 'local-creation-time' in out.meta:
-                    out.date = parse_date(out.meta['local-creation-time'],
-                                          return_timestamp=False)
-                    del out.meta['local-creation-time']
-        return out
-
     if cs == 'gcs':
         from google.cloud import storage
         client = storage.Client.from_service_account_json(
@@ -221,13 +206,39 @@ def make_index(bucket,
         else:
             client = session.client('s3')
         try:
-            objects = client.list_objects(Bucket=bucket,
-                                          Prefix=prefix)['Contents']
+            objects = client.list_objects_v2(Bucket=bucket,
+                                             Prefix=prefix,
+                                             FetchOwner=False)['Contents']
         except KeyError:
             # empty bucket
             objects = []
     else:
         raise ValueError('cloud storage type unknown: {}'.format(cs))
+
+    def format_object(o):
+        out = SimpleNamespace()
+        for k, v in _object_field_map[cs].items():
+            if isinstance(o, dict):
+                value = o[v]
+            else:
+                value = getattr(o, v)
+            setattr(out, k, value)
+        if cs == 'gcs':
+            out.meta = o.metadata if o.metadata else {}
+        elif fetch_meta:
+            out.meta = {
+                k[11:]: v
+                for k, v in client.head_object(Bucket=bucket, Key=o['Key'])
+                ['ResponseMetadata']['HTTPHeaders'].items()
+                if k.startswith('x-amz-meta-')
+            }
+        else:
+            out.meta = {}
+        if 'local-creation-time' in out.meta:
+            out.date = parse_date(out.meta['local-creation-time'],
+                                  return_timestamp=False)
+            del out.meta['local-creation-time']
+        return out
 
     for obj in objects:
         o = format_object(obj)

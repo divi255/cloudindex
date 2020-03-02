@@ -71,6 +71,11 @@ ap.add_argument('-T',
                 metavar='DIR',
                 default='%Y-%m-%d %H:%M')
 
+ap.add_argument(
+    '--fetch-meta',
+    help='Fetch custom metadata (for S3), for GCS meta data is always included',
+    action='store_true')
+
 ap.add_argument('-c',
                 '--checksums',
                 help='Get checksums from md5sums, sha1sums and sha256sums',
@@ -99,6 +104,7 @@ else:
                 time_format=a.time_format,
                 recursive=a.recursive,
                 cs=a.cloud_storage,
+                fetch_meta=a.fetch_meta,
                 get_checksums=a.checksums,
                 meta_files=[f.split(':', 1) for f in a.meta_file]
                 if a.meta_file else None)))
