@@ -2,7 +2,7 @@ __version__ = '0.0.3'
 
 import setuptools
 
-with open("README.md", "r") as fh:
+with open('README.md', 'r') as fh:
     long_description = fh.read()
 
 setuptools.setup(
@@ -13,11 +13,11 @@ setuptools.setup(
     description='Cloud bucket indexer',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url="https://github.com/divi255/cloud-index",
+    url='https://github.com/divi255/cloud-index',
     packages=setuptools.find_packages(),
     license='MIT',
     install_requires=[
-        'pyaltt2' # google.cloud.storage or boto3
+        'pyaltt2'  # google.cloud.storage or boto3
     ],
     scripts=['bin/cloud-index'],
     classifiers=('Programming Language :: Python :: 3',
