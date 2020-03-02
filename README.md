@@ -1,5 +1,7 @@
 # Cloud Index
 
+Indexes Google Cloud Platform / Amazon S3 buckets into JSON.
+
 ## Installation
 
 ```
