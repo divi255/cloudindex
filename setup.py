@@ -21,6 +21,6 @@ setuptools.setup(
     ],
     scripts=['bin/cloud-index'],
     classifiers=('Programming Language :: Python :: 3',
-                 'License :: OSI Approved :: MIT License',
-                 'Topic :: System :: Archiving :: Backup'),
+                 'License :: OSI Approved :: MIT License', 'Topic :: Internet',
+                 'Topic :: Utilities'),
 )
