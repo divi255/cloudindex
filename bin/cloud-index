@@ -1,0 +1,104 @@
+#!/usr/bin/env python3
+
+__version__ = '0.0.1'
+
+_me = 'Cloud Storage indexer'
+
+import os
+import json
+import argparse
+
+from pyaltt2.converters import parse_date
+from cloudindex import make_index
+
+object_field_map = {
+    'gcs': {
+        'name': 'name',
+        'date': 'updated',
+        'size': 'size'
+    },
+    's3': {
+        'name': 'Key',
+        'date': 'LastModified',
+        'size': 'Size'
+    }
+}
+
+ap = argparse.ArgumentParser(description=_me)
+
+ap.add_argument('bucket', help='bucket to index', metavar='BUCKET')
+
+ap.add_argument('--version', help='Print version and exit', action='store_true')
+
+ap.add_argument('-p',
+                '--prefix',
+                help='Bucket object prefix (default: /)',
+                metavar='DIR',
+                default='/')
+
+ap.add_argument(
+    '-k',
+    '--key-file',
+    help=
+    'Get CS key from file ' + \
+        '(default for gcs: from GOOGLE_APPLICATION_CREDENTIALS ' + \
+        'environment variable)',
+    metavar='FILE')
+
+ap.add_argument(
+    '-s',
+    '--cloud-storage',
+    help='Cloud storage type: gcs for Google, ' + \
+            's3 for Amazon S3 and compatible (default: gcs)',
+    metavar='TYPE',
+    choices = ['gcs', 's3'],
+    default='gcs')
+
+ap.add_argument('-r',
+                '--recursive',
+                help='Recursively include "subdirectories" and their objects',
+                action='store_true')
+
+ap.add_argument('-x',
+                '--exclude',
+                help='Files (masks) to exclude)',
+                metavar='FILE',
+                action='append')
+
+ap.add_argument('-T',
+                '--time-format',
+                help='Time format (default: %%Y-%%m-%%d %%H:%%M)',
+                metavar='DIR',
+                default='%Y-%m-%d %H:%M')
+
+ap.add_argument('-c',
+                '--checksums',
+                help='Get checksums from md5sums, sha1sums and sha256sums',
+                action='store_true')
+
+ap.add_argument(
+    '-M',
+    '--meta-file',
+    help='Additional "<info>  <file>" file, e.g. SSL certs fingerprints etc.',
+    action='append',
+    metavar='FILE:field')
+
+a = ap.parse_args()
+
+if a.version:
+    print(__version__)
+else:
+    print(
+        json.dumps(
+            make_index(
+                bucket=a.bucket,
+                key=a.key_file,
+                prefix=a.prefix,
+                exclude=[x[1:] if x.startswith('/') else x for x in a.exclude]
+                if a.exclude else None,
+                time_format=a.time_format,
+                recursive=a.recursive,
+                cs=a.cloud_storage,
+                get_checksums=a.checksums,
+                meta_files=[f.split(':', 1) for f in a.meta_file]
+                if a.meta_file else None)))

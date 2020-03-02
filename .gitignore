@@ -1,0 +1,7 @@
+__pycache__
+cloudindex.egg-info
+build
+dist
+Makefile
+TODO.todo
+*.pyc
