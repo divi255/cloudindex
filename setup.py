@@ -1,4 +1,4 @@
-__version__ = '0.0.1'
+__version__ = '0.0.2'
 
 import setuptools
 
@@ -10,7 +10,7 @@ setuptools.setup(
     version=__version__,
     author='Sergei S.',
     author_email='s@makeitwork.cz',
-    description='Cloud bucker indexer',
+    description='Cloud bucket indexer',
     long_description=long_description,
     long_description_content_type='text/markdown',
     url="https://github.com/divi255/cloud-index",
@@ -19,7 +19,7 @@ setuptools.setup(
     install_requires=[
         'pyaltt2' # google.cloud.storage or boto3
     ],
-    scripts=['bin/cloudindex'],
+    scripts=['bin/cloud-index'],
     classifiers=('Programming Language :: Python :: 3',
                  'License :: OSI Approved :: MIT License',
                  'Topic :: System :: Archiving :: Backup'),
