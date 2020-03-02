@@ -114,5 +114,5 @@ Refer to cloudindex library pydoc for the functions and args.
   bucket:
 
 ```
-gsutil -h "x-goog-meta-local-creation-time:2020-02-15 23:51:00" 
+gsutil -h "x-goog-meta-local-creation-time:2020-02-15 23:51:00" ....
 ```
