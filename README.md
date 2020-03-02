@@ -1,5 +1,11 @@
 # Cloud Index
 
+## Installation
+
+```
+pip3 install cloudindex
+```
+
 ## Authentication
 
 * To index your bucket, you need to create GCP servece account
@@ -29,12 +35,6 @@
 * Don't forget to set 600 permission on all key files you have.
 
 * If started on Google Cloud / Amazon EC2, key file may be omitted
-
-## Installation
-
-```
-pip3 install cloudindex
-```
 
 ## Usage
 
