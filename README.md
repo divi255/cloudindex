@@ -6,6 +6,12 @@ Indexes Google Cloud Platform / Amazon S3 buckets into JSON.
 
 ```
 pip3 install cloudindex
+
+# for GCS
+pip3 install google.cloud.storage
+
+# for S3
+pip3 install boto3
 ```
 
 ## Authentication
