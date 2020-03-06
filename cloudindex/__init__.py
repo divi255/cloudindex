@@ -1,5 +1,6 @@
 import os
 import fnmatch
+import pytz
 
 from pyaltt2.converters import parse_date
 from types import SimpleNamespace
@@ -178,7 +179,8 @@ def make_index(bucket,
         if not f: return
         for l in f:
             if l['is_dir'] and l['name'] == foldername:
-                if not l['date'] or folder_info.get(folder)['d'] < d:
+                if not l['date'] or folder_info.get(folder)['d'].replace(
+                        tzinfo=None) < d.replace(tzinfo=None):
                     l['date'] = d.strftime(time_format)
                 l['size'] = folder_info.get(folder)['s']
                 break
